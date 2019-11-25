@@ -29,6 +29,7 @@ void EscreveTrocoMinimo(int M[], int t){
 		cout << Escolha[t] << " ";
 		t = t - Escolha[t];
 	}
+	cout << endl;
 }
 int main(){
 	int troco;
