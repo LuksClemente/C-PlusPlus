@@ -29,7 +29,7 @@ void moveObject(){
     objectY += dY;
 
     if(objectX > maxX){
-        objectX = minX;
+        objectX = maxX;
     }
 
     numFrame++;
@@ -406,7 +406,7 @@ void drawScene(void) {
 
 	}
 
-	glTranslatef(objectX, objectY, 0);
+	glTranslatef(objectX, 0, 0);
 	mainBear();
 
 	if(jump)
