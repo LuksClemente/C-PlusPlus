@@ -88,18 +88,6 @@ void primitivaC(double rad){
 	glEnd();
 }
 
-void primitivaB() {
-
-	glBegin(GL_POLYGON);
-		glVertex3f(objectX + 10.0,objectY + 20.0, 0.0);
-		glVertex3f(objectX + 20.0,objectY + 20.0, 0.0);
-		glVertex3f(objectX + 20.0,objectY + 10.0, 0.0);
-		glVertex3f(objectX + 10.0,objectY + 10.0, 0.0);
-	glEnd();
-
-	glFlush();
-}
-
 void sol(){
 
 	int i;
@@ -223,15 +211,14 @@ void mainBear(){
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(1.5,0.9,1);
-	//primitivaQ()//original
-	primitivaB();//torso está se movendo mais rápido
+	primitivaQ();
 	glPopMatrix();
 
 	//Perna1
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(0.4,0.7,1);
-	glTranslatef(objectX + 32, objectY -2,0);
+	glTranslatef(32, -2, 0);
 	primitivaQ();
 	glPopMatrix();
 
@@ -239,7 +226,7 @@ void mainBear(){
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(0.4, 0.7, 1);
-	glTranslatef(objectX + 32, objectY -2, 0);
+	glTranslatef(32, -2, 0);
 	primitivaQ();
 	glPopMatrix();
 
@@ -247,7 +234,7 @@ void mainBear(){
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(0.4, 0.7, 1);
-	glTranslatef(objectX + 47,objectY -2, 0);
+	glTranslatef(47, -2, 0);
 	primitivaQ();
 	glPopMatrix();
 
@@ -255,7 +242,7 @@ void mainBear(){
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(0.4, 0.7, 1);
-	glTranslatef(objectX + 47,objectY -2, 0);
+	glTranslatef(47, -2, 0);
 	primitivaQ();
 	glPopMatrix();
 
@@ -263,7 +250,7 @@ void mainBear(){
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(0.4, 0.5, 1);
-	glTranslatef(objectX + 63,objectY + 17, 0);
+	glTranslatef(63, 17, 0);
 	primitivaQ();
 	glPopMatrix();
 
@@ -271,14 +258,14 @@ void mainBear(){
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
 	glScalef(0.4, 0.2, 1);
-	glTranslatef(objectX + 65.7,objectY + 58, 0);
+	glTranslatef(65.7, 58, 0);
 	primitivaQ();
 	glPopMatrix();
 
 	//Rabo
 	glPushMatrix();
 	glColor3f(0.5f, 0.35f, 0.05f);
-	glTranslatef(objectX + 15,objectY + 15, 0);
+	glTranslatef(15, 15, 0);
 	primitivaC(2);
 	glPopMatrix();
 
@@ -419,6 +406,7 @@ void drawScene(void) {
 
 	}
 
+	glTranslatef(objectX, objectY, 0);
 	mainBear();
 
 	if(jump)
