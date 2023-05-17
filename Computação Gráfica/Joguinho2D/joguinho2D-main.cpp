@@ -10,7 +10,7 @@ const double PI = 3.141592654;
 int numFrame = 0;
 
 float minX = 0.0;
-float maxX = 7.5;
+float maxX = 800;
 
 bool jump = false;
 
@@ -21,10 +21,10 @@ float objectSpeed = 0.1f;
 
 float objectDir = 0.0f;
 
-void moveObject(){
+void moveObjectX(float objectSpeedLocal, bool jump){
 
-    float dX = objectSpeed * cosf(objectDir * 3.14159f / 180.0f);
-    float dY = objectSpeed * sinf(objectDir * 3.14159f / 180.0f);
+    float dX = objectSpeedLocal * cosf(objectDir * 3.14159f / 180.0f);
+    float dY = objectSpeedLocal * sinf(objectDir * 3.14159f / 180.0f);
     objectX += dX;
     objectY += dY;
 
@@ -32,20 +32,39 @@ void moveObject(){
         objectX = maxX;
     }
 
+    if(objectX < minX){
+    	objectX = minX;
+    }
+
     numFrame++;
 }
 
+void moveObjectY(float objectSpeedLocal, bool jump){
+	if(jump == false){
+		jump = true;
+		float dY = objectSpeedLocal * sinf(objectDir * 3.14159f / 180.0f);
+		while(objectY < 10 && jump == true){
+			objectY += dY;
+			if(objectY == 10){
+				objectY = 10;
+			}
+		}
+	}
+
+
+
+}
 void specialKeys(int key, int x, int y){
 
 	switch(key){
 		case GLUT_KEY_LEFT:
+			moveObjectX(objectSpeed * (-1), jump);
 			break;
 		case GLUT_KEY_RIGHT:
-			objectDir = 2.5f;
-            moveObject();
+            moveObjectX(objectSpeed, jump);
             break;
         case GLUT_KEY_UP:
-           	jump = true;
+           	moveObjectY(objectSpeed, jump);
             break;
         case GLUT_KEY_DOWN:
         	break;
