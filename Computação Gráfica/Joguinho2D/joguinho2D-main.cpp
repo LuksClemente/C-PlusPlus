@@ -3,74 +3,78 @@
 #include <math.h>
 #include <iostream>
 
-
-//variáveis iniciais
+// variáveis iniciais
 const double PI = 3.141592654;
 
 int numFrame = 0;
 
-float minX = 0.0;
-float maxX = 800;
+float minX = 0.5f;
+float maxX = 790.0f;
 
 bool jump = false;
 
 float objectX = 0.5f;
 float objectY = -0.2f;
 
-float objectSpeed = 0.1f;
+float objectSpeed = 0.7f;
 
 float objectDir = 0.0f;
 
-void moveObjectX(float objectSpeedLocal, bool jump){
-
+void moveObjectX(float objectSpeedLocal, bool jump) {
     float dX = objectSpeedLocal * cosf(objectDir * 3.14159f / 180.0f);
     float dY = objectSpeedLocal * sinf(objectDir * 3.14159f / 180.0f);
     objectX += dX;
     objectY += dY;
 
-    if(objectX > maxX){
-        objectX = maxX;
+    if (objectX < minX) {
+         objectX = maxX;
     }
 
-    if(objectX < minX){
-    	objectX = minX;
+    if (objectX > maxX) {
+         objectX = minX;
+
     }
-
-    numFrame++;
 }
 
-void moveObjectY(float objectSpeedLocal, bool jump){
-	if(jump == false){
-		jump = true;
-		float dY = objectSpeedLocal * sinf(objectDir * 3.14159f / 180.0f);
-		while(objectY < 10 && jump == true){
-			objectY += dY;
-			if(objectY == 10){
-				objectY = 10;
-			}
-		}
-	}
-
-
-
+void moveObjectY(float objectSpeedLocal, bool jump)
+{
+    if (jump == false)
+    {
+        jump = true;
+        float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
+        while (objectY < 10 && jump == true)
+        {
+            objectY += dY;
+            if (objectY == 10)
+            {
+                objectY = 10;
+            }
+        }
+    }
 }
-void specialKeys(int key, int x, int y){
 
-	switch(key){
-		case GLUT_KEY_LEFT:
-			moveObjectX(objectSpeed * (-1), jump);
-			break;
-		case GLUT_KEY_RIGHT:
+void specialKeys(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            moveObjectX(objectSpeed * (-1), jump);
+
+            break;
+        case GLUT_KEY_RIGHT:
             moveObjectX(objectSpeed, jump);
+
             break;
         case GLUT_KEY_UP:
-           	moveObjectY(objectSpeed, jump);
+            moveObjectY(objectSpeed, jump);
             break;
         case GLUT_KEY_DOWN:
-        	break;
+            break;
     }
 
+    glutPostRedisplay();
 }
+
+
+
 
 void primitivaQ() {
 
@@ -417,22 +421,26 @@ void drawScene(void) {
 	glPushMatrix();
 	mainBear();
 	glPopMatrix();*/
-
+/*
 	if(jump){
 
 		glPushMatrix();
 		glTranslatef(0, objectY + 5.0f, 0);
 
 	}
-
+*/
+	glLoadIdentity();
+	glPushMatrix();
 	glTranslatef(objectX, 0, 0);
 	mainBear();
+	glPopMatrix();
+	/*
 
 	if(jump)
 	{
 		jump = false;
 		glPopMatrix();
-	}
+	}*/
 
 	glutSwapBuffers();
 
