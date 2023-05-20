@@ -8,8 +8,9 @@ const double PI = 3.141592654;
 
 int numFrame = 0;
 
-float minX = 0.5f;
-float maxX = 790.0f;
+//float minX = 0.5f;
+float minX = -50.0f;
+float maxX = 800.0f;
 
 bool jump = false;
 
@@ -21,34 +22,43 @@ float objectSpeed = 0.7f;
 float objectDir = 0.0f;
 
 void moveObjectX(float objectSpeedLocal, bool jump) {
-    float dX = objectSpeedLocal * cosf(objectDir * 3.14159f / 180.0f);
-    float dY = objectSpeedLocal * sinf(objectDir * 3.14159f / 180.0f);
+
+	float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
+    float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
     objectX += dX;
     objectY += dY;
 
     if (objectX < minX) {
-         objectX = maxX;
+
+    	objectX = maxX;
+
     }
 
     if (objectX > maxX) {
-         objectX = minX;
+
+    	//objectX = minX;
+    	objectX = minX;
 
     }
 }
 
-void moveObjectY(float objectSpeedLocal, bool jump)
-{
-    if (jump == false)
-    {
-        jump = true;
-        float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
-        while (objectY < 10 && jump == true)
-        {
-            objectY += dY;
-            if (objectY == 10)
-            {
-                objectY = 10;
-            }
+void moveObjectY(float objectSpeedLocal, bool jump){
+
+	if (jump == false){
+
+		jump = true;
+
+		float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
+
+		while (objectY < 10 && jump == true){
+
+			objectY += dY;
+
+			if (objectY == 10){
+
+				objectY = 10;
+
+			}
         }
     }
 }
@@ -56,18 +66,25 @@ void moveObjectY(float objectSpeedLocal, bool jump)
 void specialKeys(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
-            moveObjectX(objectSpeed * (-1), jump);
 
-            break;
+        	moveObjectX(objectSpeed * (-1), jump);
+        	break;
+
         case GLUT_KEY_RIGHT:
-            moveObjectX(objectSpeed, jump);
 
-            break;
+        	moveObjectX(objectSpeed, jump);
+        	break;
+
         case GLUT_KEY_UP:
-            moveObjectY(objectSpeed, jump);
+
+        	//moveObjectY(objectSpeed, jump);
+        	jump = true;
             break;
+
         case GLUT_KEY_DOWN:
-            break;
+
+        	break;
+
     }
 
     glutPostRedisplay();
@@ -79,10 +96,10 @@ void specialKeys(int key, int x, int y) {
 void primitivaQ() {
 
 	glBegin(GL_POLYGON);
-		glVertex3f(10.0, 20.0, 0.0);
-		glVertex3f(20.0, 20.0, 0.0);
-		glVertex3f(20.0, 10.0, 0.0);
-		glVertex3f(10.0, 10.0, 0.0);
+	glVertex3f(10.0, 20.0, 0.0);
+	glVertex3f(20.0, 20.0, 0.0);
+	glVertex3f(20.0, 10.0, 0.0);
+	glVertex3f(10.0, 10.0, 0.0);
 	glEnd();
 
 	glFlush();
@@ -91,9 +108,9 @@ void primitivaQ() {
 void primitivaT() {
 
 	glBegin(GL_TRIANGLES);
-		glVertex3f(10.0, 20.0, 0.0);
-		glVertex3f(15.0, 30.0, 0.0);
-		glVertex3f(20.0, 20.0, 0.0);
+	glVertex3f(10.0, 20.0, 0.0);
+	glVertex3f(15.0, 30.0, 0.0);
+	glVertex3f(20.0, 20.0, 0.0);
 	glEnd();
 
 	glFlush();
@@ -130,19 +147,20 @@ void sol(){
 void montanhaA(){
 
 	glPushMatrix();
-		glColor3f(0,0,0.75);
-		primitivaT();
+	glColor3f(0,0,0.75);
+	primitivaT();
 	glPopMatrix();
 	glPushMatrix();
-		glColor3f(1,1,1);
-		glBegin(GL_POLYGON);
-			glVertex3f(15,30,0);
-			glVertex3f(13.5,27,0);
-			glVertex3f(13.3,25,0);
-			glVertex3f(15,26,0);
-			glVertex3f(15.7,25,0);
-			glVertex3f(16.5,27,0);
-		glEnd();
+	glColor3f(1,1,1);
+
+	glBegin(GL_POLYGON);
+	glVertex3f(15,30,0);
+	glVertex3f(13.5,27,0);
+	glVertex3f(13.3,25,0);
+	glVertex3f(15,26,0);
+	glVertex3f(15.7,25,0);
+	glVertex3f(16.5,27,0);
+	glEnd();
 	glPopMatrix();
 
 	glFlush();
@@ -153,11 +171,11 @@ void morro(){
 	glPushMatrix();
 	glColor3f(0,1,0);
 	glBegin(GL_POLYGON);
-		glVertex3f(20, 10,0);
-		glVertex3f(60, 10, 0);
-		glVertex3f(50, 15, 0);
-		glVertex3f(30,15,0);
-		glEnd();
+	glVertex3f(20, 10,0);
+	glVertex3f(60, 10, 0);
+	glVertex3f(50, 15, 0);
+	glVertex3f(30,15,0);
+	glEnd();
 	glPopMatrix();
 
 	glFlush();
@@ -167,10 +185,10 @@ void gramaA(){
 	glPushMatrix();
 	glColor3f(0,1,0);
 	glBegin(GL_POLYGON);
-		glVertex3f(0,0,0);
-		glVertex3f(0, 20, 0);
-		glVertex3f(800, 20, 0);
-		glVertex3f(800,0,0);
+	glVertex3f(0,0,0);
+	glVertex3f(0, 20, 0);
+	glVertex3f(800, 20, 0);
+	glVertex3f(800,0,0);
 	glEnd();
 	glPopMatrix();
 
@@ -182,10 +200,10 @@ void gramaB(){
 	glPushMatrix();
 	glColor3f(0.5,1,0.5);
 	glBegin(GL_POLYGON);
-		glVertex3f(0,20,0);
-		glVertex3f(0, 25, 0);
-		glVertex3f(800, 25, 0);
-		glVertex3f(800,20,0);
+	glVertex3f(0,20,0);
+	glVertex3f(0, 25, 0);
+	glVertex3f(800, 25, 0);
+	glVertex3f(800,20,0);
 	glEnd();
 	glPopMatrix();
 
@@ -200,10 +218,10 @@ void arvoreA(){
 	primitivaC(8);
 	glPopMatrix();
 	glPushMatrix();
-		glColor3f(0.5f, 0.35f, 0.05f);
-		glScalef(0.3,1.5,1);
-		glTranslatef(18,2,0);
-		primitivaQ();
+	glColor3f(0.5f, 0.35f, 0.05f);
+	glScalef(0.3,1.5,1);
+	glTranslatef(18,2,0);
+	primitivaQ();
 	glPopMatrix();
 
 	glFlush();
@@ -219,13 +237,13 @@ void arvoreB(){
 	glPopMatrix();
 
 	glPushMatrix();
-		glColor3f(0.5f, 0.35f, 0.05f);
-		glScalef(0.3,1.5,1);
-		glTranslatef(18,2,0);
-		primitivaQ();
+	glColor3f(0.5f, 0.35f, 0.05f);
+	glScalef(0.3,1.5,1);
+	glTranslatef(18,2,0);
+	primitivaQ();
 	glPopMatrix();
 
-		glFlush();
+	glFlush();
 }
 
 void mainBear(){
@@ -337,9 +355,9 @@ void drawScene(void) {
 	gramaA();
 	glPopMatrix();
 	glLoadIdentity();
-		glPushMatrix();
-		gramaB();
-		glPopMatrix();
+	glPushMatrix();
+	gramaB();
+	glPopMatrix();
 
 	glLoadIdentity();
 	glPushMatrix();
@@ -349,11 +367,11 @@ void drawScene(void) {
 	glPopMatrix();
 
 	glLoadIdentity();
-		glPushMatrix();
-		glTranslatef(15,25.5,0);
-		glScalef(0.3,0.3,1);
-		arvoreA();
-		glPopMatrix();
+	glPushMatrix();
+	glTranslatef(15,25.5,0);
+	glScalef(0.3,0.3,1);
+	arvoreA();
+	glPopMatrix();
 
 	glLoadIdentity();
 	glPushMatrix();
@@ -363,11 +381,11 @@ void drawScene(void) {
 	glPopMatrix();
 
 	glLoadIdentity();
-		glPushMatrix();
-		glTranslatef(27, 23, 0);
-		glScalef(0.3, 0.3, 1);
-		arvoreB();
-		glPopMatrix();
+	glPushMatrix();
+	glTranslatef(27, 23, 0);
+	glScalef(0.3, 0.3, 1);
+	arvoreB();
+	glPopMatrix();
 
 	glLoadIdentity();
 	glPushMatrix();
@@ -421,26 +439,24 @@ void drawScene(void) {
 	glPushMatrix();
 	mainBear();
 	glPopMatrix();*/
-/*
+
 	if(jump){
 
 		glPushMatrix();
-		glTranslatef(0, objectY + 5.0f, 0);
+		glTranslatef(0, objectY + 15.0f, 0);
 
 	}
-*/
-	glLoadIdentity();
-	glPushMatrix();
+
 	glTranslatef(objectX, 0, 0);
 	mainBear();
-	glPopMatrix();
-	/*
 
-	if(jump)
-	{
+	if(jump){
+
 		jump = false;
 		glPopMatrix();
-	}*/
+
+	}
+
 
 	glutSwapBuffers();
 
