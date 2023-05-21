@@ -10,7 +10,8 @@ int numFrame = 0;
 
 //float minX = 0.5f;
 float minX = -50.0f;
-float maxX = 800.0f;
+//float maxX = 800.0f;
+float maxX = 100.0f;
 
 bool jump = false;
 
@@ -20,6 +21,10 @@ float objectY = -0.2f;
 float objectSpeed = 0.7f;
 
 float objectDir = 0.0f;
+
+char string[100];
+
+int playerScore = 0;
 
 void moveObjectX(float objectSpeedLocal, bool jump) {
 
@@ -315,6 +320,20 @@ void mainBear(){
 	glFlush();
 }
 
+/*void drawText(char* string, int x, int y)
+{
+	  char *c;
+	  glPushMatrix();
+	  glTranslatef(x, y,0);
+	  glScalef(0.1,-0.1,1);
+
+	  for (c=string; *c != '\0'; c++)
+	  {
+    		glutStrokeCharacter(GLUT_STROKE_ROMAN , *c);
+	  }
+	  glPopMatrix();
+
+}*/
 
 // Drawing routine.
 void drawScene(void) {
@@ -323,6 +342,10 @@ void drawScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glLoadIdentity();
+
+	//sprintf(string,"Score: %d ", playerScore);
+	//drawText(string,0,0);
+
 	glPushMatrix();
 	glScalef(5,2.5,1);
 	glTranslatef(-10,-10,0);
