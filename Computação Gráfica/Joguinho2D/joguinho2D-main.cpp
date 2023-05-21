@@ -141,6 +141,9 @@ void sol(){
 }
 
 void moeda(){
+
+	moedaY = moedaY - 0.3;
+
 	glPushMatrix();
 	glColor3f(1,0.8,0);
 	primitivaC(5);
@@ -152,14 +155,28 @@ void moeda(){
 	primitivaC(5);
 	glColor3f(0,0,0);
 	glPopMatrix();
+
+	 if(moedaY <= 0){
+
+		 moedaVisivel = false;
+	     moedaY = 60;
+	 }
 }
 
 void bigorna(){
+
+	bigornaY = bigornaY - 0.3;
 
 	glPushMatrix();
 	glColor3f(0.4,0.4,0.4);
 	primitivaT();
 	glPopMatrix();
+
+	if(bigornaY <= -17){
+
+		bigornaVisivel = false;
+		bigornaY = 43;
+	}
 
 }
 
@@ -336,9 +353,7 @@ void mainBear(){
 
 void pegaMoeda(){
 
-	moedaVisivel = true;
-
-	if((objectX == moedaX)||(objectY == moedaY)){
+	if((objectX == moedaX)&&(objectY == moedaY)){
 
 		moedaPega = true;
 		playerScore++;
@@ -349,9 +364,7 @@ void pegaMoeda(){
 
 void pegaBigorna(){
 
-	bigornaVisivel = true;
-
-	if((objectX == bigornaX)||(objectY == bigornaY)){
+	if((objectX == bigornaX)&&(objectY == bigornaY)){
 
 		bigornaPega = true;
 		playerScore--;
@@ -507,6 +520,7 @@ void drawScene(void) {
 		glTranslatef(moedaX,moedaY,0);
 		glScalef(0.7, 0.7, 1);
 		moeda();
+		pegaMoeda();
 		glPopMatrix();
 	}
 
@@ -516,6 +530,7 @@ void drawScene(void) {
 		glTranslatef(bigornaX,bigornaY,0);
 		glScalef(1.3, 0.7, 1);
 		bigorna();
+		pegaBigorna();
 		glPopMatrix();
 	}
 
@@ -549,7 +564,7 @@ void doFrame(int v) {
 
     		moedaVisivel = true;
     		moedaX = objectX + 40;
-    		moedaY = 35;
+    		moedaY = 60;
     	}
     }
 
@@ -558,8 +573,8 @@ void doFrame(int v) {
     	if((bigornaVisivel == false)&&(rand <= 0.4)){
 
         	bigornaVisivel = true;
-        	bigornaX = objectX + 20;
-        	bigornaY = 18;
+        	bigornaX = objectX + 25;
+        	bigornaY = 43;
         }
     }
 
