@@ -27,6 +27,18 @@ char string[100];
 
 int playerScore = 0;
 
+bool bigornaVisivel = false;
+bool moedaVisivel = false;
+
+bool bigornaPega = false;
+bool moedaPega = false;
+
+float moedaX = 0;
+float moedaY = 0;
+
+float bigornaX = 0;
+float bigornaY = 0;
+
 void moveObjectX(float objectSpeedLocal, bool jump) {
 
 	float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
@@ -42,30 +54,8 @@ void moveObjectX(float objectSpeedLocal, bool jump) {
 
     if (objectX > maxX) {
 
-    	//objectX = minX;
     	objectX = minX;
 
-    }
-}
-
-void moveObjectY(float objectSpeedLocal, bool jump){
-
-	if (jump == false){
-
-		jump = true;
-
-		float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
-
-		while (objectY < 10 && jump == true){
-
-			objectY += dY;
-
-			if (objectY == 10){
-
-				objectY = 10;
-
-			}
-        }
     }
 }
 
@@ -164,7 +154,7 @@ void moeda(){
 	glPopMatrix();
 }
 
-void armadilha(){
+void bigorna(){
 
 	glPushMatrix();
 	glColor3f(0.4,0.4,0.4);
@@ -344,20 +334,31 @@ void mainBear(){
 	glFlush();
 }
 
-/*void drawText(char* string, int x, int y)
-{
-	  char *c;
-	  glPushMatrix();
-	  glTranslatef(x, y,0);
-	  glScalef(0.1,-0.1,1);
+void pegaMoeda(){
 
-	  for (c=string; *c != '\0'; c++)
-	  {
-    		glutStrokeCharacter(GLUT_STROKE_ROMAN , *c);
-	  }
-	  glPopMatrix();
+	moedaVisivel = true;
 
-}*/
+	if((objectX == moedaX)||(objectY == moedaY)){
+
+		moedaPega = true;
+		playerScore++;
+		moedaVisivel = false;
+	}
+
+}
+
+void pegaBigorna(){
+
+	bigornaVisivel = true;
+
+	if((objectX == bigornaX)||(objectY == bigornaY)){
+
+		bigornaPega = true;
+		playerScore--;
+		bigornaVisivel = false;
+	}
+
+}
 
 // Drawing routine.
 void drawScene(void) {
@@ -366,9 +367,6 @@ void drawScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glLoadIdentity();
-
-	//sprintf(string,"Score: %d ", playerScore);
-	//drawText(string,0,0);
 
 	glPushMatrix();
 	glScalef(5,2.5,1);
@@ -482,11 +480,6 @@ void drawScene(void) {
 	sol();
 	glPopMatrix();
 
-	/*glLoadIdentity();
-	glPushMatrix();
-	mainBear();
-	glPopMatrix();*/
-
 	glPushMatrix();
 
 	if(jump){
@@ -508,17 +501,23 @@ void drawScene(void) {
 	}
 	glPopMatrix();
 
-	/*glPushMatrix();
-	glTranslatef(45,10,0);
-	glScalef(0.7, 0.7, 1);
-	moeda();
-	glPopMatrix();
+	if(moedaVisivel){
 
-	glPushMatrix();
-	glTranslatef(50,-7,0);
-	glScalef(1.3, 0.7, 1);
-	armadilha();
-	glPopMatrix();*/
+		glPushMatrix();
+		glTranslatef(moedaX,moedaY,0);
+		glScalef(0.7, 0.7, 1);
+		moeda();
+		glPopMatrix();
+	}
+
+	if(bigornaVisivel){
+
+		glPushMatrix();
+		glTranslatef(bigornaX,bigornaY,0);
+		glScalef(1.3, 0.7, 1);
+		bigorna();
+		glPopMatrix();
+	}
 
 	glutSwapBuffers();
 
@@ -539,7 +538,31 @@ void Init(void) {
 }
 
 void doFrame(int v) {
+
     numFrame++;
+
+    float rand = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
+
+    if (numFrame % 150 == 0){
+
+    	if((moedaVisivel == false)&&(rand > 0.4)){
+
+    		moedaVisivel = true;
+    		moedaX = objectX + 40;
+    		moedaY = 35;
+    	}
+    }
+
+    if (numFrame % 150 == 0){
+
+    	if((bigornaVisivel == false)&&(rand <= 0.4)){
+
+        	bigornaVisivel = true;
+        	bigornaX = objectX + 20;
+        	bigornaY = 18;
+        }
+    }
+
     glutPostRedisplay();
     glutTimerFunc(20,doFrame,0);
 }
