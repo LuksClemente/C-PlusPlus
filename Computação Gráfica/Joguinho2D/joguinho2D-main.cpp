@@ -3,15 +3,16 @@
 #include <math.h>
 #include <iostream>
 
+
 // variáveis iniciais
 const double PI = 3.141592654;
 
 int numFrame = 0;
 
 //float minX = 0.5f;
-float minX = -50.0f;
+float minX = -40.0f;
 //float maxX = 800.0f;
-float maxX = 100.0f;
+float maxX = 90.0f;
 
 bool jump = false;
 
@@ -147,6 +148,29 @@ void sol(){
 	}
 	primitivaC(5);
 	glColor3f(0,0,0);
+}
+
+void moeda(){
+	glPushMatrix();
+	glColor3f(1,0.8,0);
+	primitivaC(5);
+	glPopMatrix();
+
+	glPushMatrix();
+	glScalef(0.8, 0.8, 1);
+	glColor3f(1,1,0);
+	primitivaC(5);
+	glColor3f(0,0,0);
+	glPopMatrix();
+}
+
+void armadilha(){
+
+	glPushMatrix();
+	glColor3f(0.4,0.4,0.4);
+	primitivaT();
+	glPopMatrix();
+
 }
 
 void montanhaA(){
@@ -463,23 +487,38 @@ void drawScene(void) {
 	mainBear();
 	glPopMatrix();*/
 
+	glPushMatrix();
+
 	if(jump){
 
-		glPushMatrix();
+		//glPushMatrix();
 		glTranslatef(0, objectY + 15.0f, 0);
 
 	}
 
+	//glTranslatef(objectX, objectY, 0);
 	glTranslatef(objectX, 0, 0);
 	mainBear();
 
 	if(jump){
 
 		jump = false;
-		glPopMatrix();
+		//glPopMatrix();
 
 	}
+	glPopMatrix();
 
+	/*glPushMatrix();
+	glTranslatef(45,10,0);
+	glScalef(0.7, 0.7, 1);
+	moeda();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(50,-7,0);
+	glScalef(1.3, 0.7, 1);
+	armadilha();
+	glPopMatrix();*/
 
 	glutSwapBuffers();
 
