@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 
+using namespace std;
 
 // variáveis iniciais
 const double PI = 3.141592654;
@@ -353,7 +354,7 @@ void mainBear(){
 
 void pegaMoeda(){
 
-	if((objectX == moedaX)&&(objectY == moedaY)){
+	if((moedaX <= objectX + 30)&&(moedaY <= 20)){
 
 		moedaPega = true;
 		playerScore++;
@@ -364,7 +365,7 @@ void pegaMoeda(){
 
 void pegaBigorna(){
 
-	if((objectX == bigornaX)&&(objectY == bigornaY)){
+	if((bigornaX <= objectX + 20)&&(bigornaY <= 3)){
 
 		bigornaPega = true;
 		playerScore--;
@@ -519,8 +520,8 @@ void drawScene(void) {
 		glPushMatrix();
 		glTranslatef(moedaX,moedaY,0);
 		glScalef(0.7, 0.7, 1);
-		moeda();
 		pegaMoeda();
+		moeda();
 		glPopMatrix();
 	}
 
@@ -529,10 +530,12 @@ void drawScene(void) {
 		glPushMatrix();
 		glTranslatef(bigornaX,bigornaY,0);
 		glScalef(1.3, 0.7, 1);
-		bigorna();
 		pegaBigorna();
+		bigorna();
 		glPopMatrix();
 	}
+
+	cout<<"Score: "<<playerScore<<endl;
 
 	glutSwapBuffers();
 
