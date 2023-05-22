@@ -641,7 +641,7 @@ int main(int argc, char **argv) {
 	glutInitWindowSize(800, 800);
 	glutInitWindowPosition(100, 100);
 
-	glutCreateWindow("trabalho1");
+	glutCreateWindow("CoinBear 2D");
 
 	Init();
 
