@@ -41,7 +41,7 @@ float bigornaY = 0;
 
 bool gameOver = false;
 
-void moveObjectX(float objectSpeedLocal, bool jump) {
+void moveObjectX(float objectSpeedLocal) {
 
 	float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
     float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
@@ -65,17 +65,16 @@ void specialKeys(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
 
-        	moveObjectX(objectSpeed * (-1), jump);
+        	moveObjectX(objectSpeed * (-1));
         	break;
 
         case GLUT_KEY_RIGHT:
 
-        	moveObjectX(objectSpeed, jump);
+        	moveObjectX(objectSpeed);
         	break;
 
         case GLUT_KEY_UP:
 
-        	//moveObjectY(objectSpeed, jump);
         	jump = true;
             break;
 
@@ -373,7 +372,7 @@ void pegaMoeda(){
 
 void pegaBigorna(){
 
-	if((bigornaX <= objectX + 20)&&(bigornaY <= 3)){
+	if((bigornaX <= objectX + 10)&&(bigornaY <= 3)){
 
 		bigornaPega = true;
 		playerScore--;
