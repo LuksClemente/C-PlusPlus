@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <math.h>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -24,8 +25,6 @@ float objectSpeed = 0.7f;
 
 float objectDir = 0.0f;
 
-char string[100];
-
 int playerScore = 0;
 
 bool bigornaVisivel = false;
@@ -39,6 +38,8 @@ float moedaY = 0;
 
 float bigornaX = 0;
 float bigornaY = 0;
+
+bool gameOver = false;
 
 void moveObjectX(float objectSpeedLocal, bool jump) {
 
@@ -87,6 +88,13 @@ void specialKeys(int key, int x, int y) {
     glutPostRedisplay();
 }
 
+void drawText(const string& text, float x, float y) {
+
+	glRasterPos2f(x, y);
+    for (const char& c : text) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+}
 
 
 
@@ -535,7 +543,24 @@ void drawScene(void) {
 		glPopMatrix();
 	}
 
-	cout<<"Score: "<<playerScore<<endl;
+	if(gameOver){
+
+		glLoadIdentity();
+		glPushMatrix();
+		glTranslatef(35.0f, 50.0f, 0.0f);
+		glColor3f(1, 0, 0);
+		drawText("GAME OVER! MUITO RUIM KK NUB XD!", 0.0f, 0.0f);
+		glPopMatrix();
+	}
+	else{
+		glLoadIdentity();
+		glPushMatrix();
+		glTranslatef(2.5f, 90.0f, 0.0f);
+		string scoreText = "Score: " + to_string(playerScore);
+		glColor3f(1, 0, 0);
+		drawText(scoreText, 0.0f, 0.0f);
+		glPopMatrix();
+	}
 
 	glutSwapBuffers();
 
@@ -579,6 +604,14 @@ void doFrame(int v) {
         	bigornaX = objectX + 25;
         	bigornaY = 43;
         }
+    }
+
+    if(playerScore < 0){
+
+    	gameOver = true;
+
+    	return;
+
     }
 
     glutPostRedisplay();
