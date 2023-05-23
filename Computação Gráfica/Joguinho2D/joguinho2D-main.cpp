@@ -11,9 +11,7 @@ const double PI = 3.141592654;
 
 int numFrame = 0;
 
-//float minX = 0.5f;
 float minX = -40.0f;
-//float maxX = 800.0f;
 float maxX = 90.0f;
 
 bool jump = false;
@@ -41,12 +39,13 @@ float bigornaY = 0;
 
 bool gameOver = false;
 
+bool run = false;
+
 void moveObjectX(float objectSpeedLocal) {
 
 	float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
-    float dY = objectSpeedLocal * sinf(objectDir * PI / 180.0f);
+
     objectX += dX;
-    objectY += dY;
 
     if (objectX < minX) {
 
@@ -80,6 +79,17 @@ void specialKeys(int key, int x, int y) {
 
         case GLUT_KEY_DOWN:
 
+        	if(run){
+
+        		run = false;
+        		objectSpeed = 0.7f;
+        	}
+        	else{
+
+        		run = true;
+        		objectSpeed = 1.4f;
+        	}
+
         	break;
 
     }
@@ -90,7 +100,9 @@ void specialKeys(int key, int x, int y) {
 void drawText(const string& text, float x, float y) {
 
 	glRasterPos2f(x, y);
+
     for (const char& c : text) {
+
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
     }
 }
@@ -361,7 +373,7 @@ void mainBear(){
 
 void pegaMoeda(){
 
-	if((moedaX <= objectX + 30)&&(moedaY <= 20)){
+	if(((moedaX <= objectX + 30)&&(moedaX >= objectX + 10))&&(moedaY <= 20)){
 
 		moedaPega = true;
 		playerScore++;
@@ -372,7 +384,7 @@ void pegaMoeda(){
 
 void pegaBigorna(){
 
-	if((bigornaX <= objectX + 10)&&(bigornaY <= 3)){
+	if(((bigornaX <= objectX + 10)&&(bigornaX >= objectX - 10))&&(bigornaY <= 3)){
 
 		bigornaPega = true;
 		playerScore--;
@@ -505,19 +517,16 @@ void drawScene(void) {
 
 	if(jump){
 
-		//glPushMatrix();
 		glTranslatef(0, objectY + 15.0f, 0);
 
 	}
 
-	//glTranslatef(objectX, objectY, 0);
 	glTranslatef(objectX, 0, 0);
 	mainBear();
 
 	if(jump){
 
 		jump = false;
-		//glPopMatrix();
 
 	}
 	glPopMatrix();
@@ -633,8 +642,6 @@ void resize(int w, int h) {
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 
-	//glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-
 	glutInitDisplayMode(GLUT_DOUBLE);
 
 	glutInitWindowSize(800, 800);
@@ -651,8 +658,6 @@ int main(int argc, char **argv) {
 	glutTimerFunc(20,doFrame,0);
 
 	glutReshapeFunc(resize);
-
-	//Init();
 
 	glutMainLoop();
 }
