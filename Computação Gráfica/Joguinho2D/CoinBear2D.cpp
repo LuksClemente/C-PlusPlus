@@ -1,3 +1,6 @@
+//CoinBear 2D
+//Por Leonardo Bacellar e Lucas Clemente
+
 #include <GL/glut.h>
 #include <cstdlib>
 #include <math.h>
@@ -41,6 +44,8 @@ bool gameOver = false;
 
 bool run = false;
 
+//função que move os objetos no eixo X
+//movimento esse de acordo com a velocidade e direção indicadas
 void moveObjectX(float objectSpeedLocal) {
 
 	float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
@@ -60,6 +65,8 @@ void moveObjectX(float objectSpeedLocal) {
     }
 }
 
+//callback do teclado
+//trata eventos das setinhas quando pressionadas
 void specialKeys(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
@@ -94,9 +101,11 @@ void specialKeys(int key, int x, int y) {
 
     }
 
+    //redesenha a cena
     glutPostRedisplay();
 }
 
+//função que escreve a string indicada na tela
 void drawText(const string& text, float x, float y) {
 
 	glRasterPos2f(x, y);
@@ -107,8 +116,7 @@ void drawText(const string& text, float x, float y) {
     }
 }
 
-
-
+//demais primitivas que serão utilizadas no projeto
 void primitivaQ() {
 
 	glBegin(GL_POLYGON);
@@ -144,6 +152,8 @@ void primitivaC(double rad){
 	glEnd();
 }
 
+//demais objetos que serão utilizados no projeto
+//construídos a partir das primitivas
 void sol(){
 
 	int i;
@@ -302,6 +312,7 @@ void arvoreB(){
 	glFlush();
 }
 
+//personagem principal
 void mainBear(){
 
 	//Torso
@@ -371,6 +382,7 @@ void mainBear(){
 	glFlush();
 }
 
+//função que trata a colisão do personagem com o objeto moeda
 void pegaMoeda(){
 
 	if(((moedaX <= objectX + 30)&&(moedaX >= objectX + 10))&&(moedaY <= 20)){
@@ -382,6 +394,7 @@ void pegaMoeda(){
 
 }
 
+//função que trata a colisão do personagem com o objeto bigorna
 void pegaBigorna(){
 
 	if(((bigornaX <= objectX + 10)&&(bigornaX >= objectX - 10))&&(bigornaY <= 3)){
@@ -393,7 +406,7 @@ void pegaBigorna(){
 
 }
 
-// Drawing routine.
+//desenha a cena
 void drawScene(void) {
 
 	glMatrixMode(GL_MODELVIEW);
@@ -401,6 +414,7 @@ void drawScene(void) {
 
 	glLoadIdentity();
 
+	//montanhas e morros
 	glPushMatrix();
 	glScalef(5,2.5,1);
 	glTranslatef(-10,-10,0);
@@ -428,6 +442,7 @@ void drawScene(void) {
 	morro();
 	glPopMatrix();
 
+	//gramados
 	glLoadIdentity();
 	glPushMatrix();
 	gramaA();
@@ -437,6 +452,7 @@ void drawScene(void) {
 	gramaB();
 	glPopMatrix();
 
+	//árvores
 	glLoadIdentity();
 	glPushMatrix();
 	glTranslatef(1,20,0);
@@ -507,6 +523,7 @@ void drawScene(void) {
 	arvoreA();
 	glPopMatrix();
 
+	//sol
 	glLoadIdentity();
 	glPushMatrix();
 	glTranslatef(10,70,0);
@@ -515,12 +532,14 @@ void drawScene(void) {
 
 	glPushMatrix();
 
+	//mecânica do pulo
 	if(jump){
 
 		glTranslatef(0, objectY + 15.0f, 0);
 
 	}
 
+	//desenha o personagem principal
 	glTranslatef(objectX, 0, 0);
 	mainBear();
 
@@ -531,6 +550,7 @@ void drawScene(void) {
 	}
 	glPopMatrix();
 
+	//desenha a moeda
 	if(moedaVisivel){
 
 		glPushMatrix();
@@ -541,6 +561,7 @@ void drawScene(void) {
 		glPopMatrix();
 	}
 
+	//desenha a bigorna
 	if(bigornaVisivel){
 
 		glPushMatrix();
@@ -551,6 +572,7 @@ void drawScene(void) {
 		glPopMatrix();
 	}
 
+	//desenha a tela de "game over"
 	if(gameOver){
 
 		glLoadIdentity();
@@ -560,6 +582,7 @@ void drawScene(void) {
 		drawText("GAME OVER! MUITO RUIM KK NUB XD!", 0.0f, 0.0f);
 		glPopMatrix();
 	}
+	//desenha o score
 	else{
 		glLoadIdentity();
 		glPushMatrix();
@@ -572,11 +595,11 @@ void drawScene(void) {
 
 	glutSwapBuffers();
 
-
+	//redesenha a cena
 	glutPostRedisplay();
 }
 
-// Initialization routine.
+//rotina de inicialização
 void Init(void) {
 	glClearColor(0.75, 0.0, 1.0, 0.0);
 
@@ -588,14 +611,19 @@ void Init(void) {
 	glLoadIdentity();
 }
 
+// atualiza a lógica do jogo e controla o fluxo de frames
 void doFrame(int v) {
 
+	//incrementa o número de frames
     numFrame++;
 
+    //gera um número aleatório entre 0 e 1
     float rand = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
 
+    //torna a moeda visível a cada 150 frames
     if (numFrame % 150 == 0){
 
+    	//define um momento aleatório para a moeda ficar visível
     	if((moedaVisivel == false)&&(rand > 0.4)){
 
     		moedaVisivel = true;
@@ -604,8 +632,10 @@ void doFrame(int v) {
     	}
     }
 
+    //torna a bigorna visível a cada 150 frames
     if (numFrame % 150 == 0){
 
+    	//define um momento aleatório para a bigorna ficar visível
     	if((bigornaVisivel == false)&&(rand <= 0.4)){
 
         	bigornaVisivel = true;
@@ -614,6 +644,7 @@ void doFrame(int v) {
         }
     }
 
+    //encerra o jogo caso o placar fique negativo
     if(playerScore < 0){
 
     	gameOver = true;
@@ -622,11 +653,12 @@ void doFrame(int v) {
 
     }
 
+    //redesenha a cena
     glutPostRedisplay();
     glutTimerFunc(20,doFrame,0);
 }
 
-// OpenGL window reshape routine.
+//redefine o tamanho da janela da cena
 void resize(int w, int h) {
 	glViewport(0, 0, w, h);
 
@@ -638,7 +670,7 @@ void resize(int w, int h) {
 	glLoadIdentity();
 }
 
-// Main routine.
+//rotina principal
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 
