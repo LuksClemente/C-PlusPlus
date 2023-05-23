@@ -1,3 +1,4 @@
-#CoinBear 2D#
-##Por Leonardo Bacellar e Lucas Clemente##
+# CoinBear 2D
+### Por Leonardo Bacellar e Lucas Clemente
 
+## Introdução
