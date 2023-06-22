@@ -48,16 +48,16 @@ void specialKeys(int key, int x, int y) {
 
         case GLUT_KEY_DOWN:
 
-        	if(run){
+        	//if(run){
 
         		//run = false;
         		//objectSpeed = 0.7f;
-        	}
-        	else{
+        	//}
+        	//else{
 
         		//run = true;
         		//objectSpeed = 1.4f;
-        	}
+        	//}
 
         	break;
 
@@ -80,12 +80,77 @@ void moeda(){
 	  glPopMatrix();
 }
 
+void chao(){
+
+	//glRotatef(35.0, 1.0, 1.0, 0.0);
+
+	 glPushMatrix();
+	 glScalef(20, 0.1, 20);
+	 //glTranslatef(0.05, 1.9, 0.8);
+	 glutSolidCube(1);
+	 glPopMatrix();
+
+}
+
+void arvore(){
+	glPushMatrix();
+	glColor3f(0.5, 0.35, 0.05);
+	glScalef(1.2,3,1.2);
+	primitivaQ();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0,1,0);
+	glScalef(2.5,2.5,2.5);
+	glTranslatef(0,1,0);
+	primitivaQ();
+	glPopMatrix();
+
+}
+
+void urso(){
+	glPushMatrix();
+	glColor3f(0.5, 0.35, 0.05);
+	glScalef(0.5,1.3,0.5);
+	primitivaQ();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.5, 0.35, 0.05);
+	glScalef(0.5,1.3,0.5);
+	glTranslatef(3,0,0);
+	primitivaQ();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.5, 0.35, 0.05);
+	glScalef(0.5,1.3,0.5);
+	glTranslatef(0,0,3);
+	primitivaQ();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.5, 0.35, 0.05);
+	glScalef(0.5,1.3,0.5);
+	glTranslatef(3,0,3);
+	primitivaQ();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.5, 0.35, 0.05);
+	glScalef(2.5,1,2.5);
+	glTranslatef(0.3,0,0);
+	primitivaQ();
+	glPopMatrix();
+
+}
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0,0,10,0,0,0,0,1,0);
+	gluLookAt(10,10,10,0,0,0,0,1,0);
 	glPushMatrix();
 
 	//glEnable(GL_LIGHT1);
@@ -94,8 +159,36 @@ void display() {
 	// Rotate the scene so we can see the tops of the shapes.
 	//glRotatef(35.0, 1.0, 1.0, 0.0);
 
+	/*glPushMatrix();
+	chao();
+	glPopMatrix();
+
 	glPushMatrix();
-	primitivaQ();
+	glTranslatef(0,1.5,0);
+	arvore();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(3,1.5,0);
+	arvore();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0,1.5,3);
+	arvore();
+	glPopMatrix();*/
+	glPushMatrix();
+	urso();
+	glPopMatrix();
+
+
+
+
+
+
+
+
+
 	glFlush();
 }
 
