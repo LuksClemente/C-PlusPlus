@@ -27,31 +27,44 @@ void primitivaT(){
 	glutSolidTorus(0.5, 1, 20, 20);
 }
 
-void keyboard (unsigned char key, int x, int y){
-  switch (key) {
-  	  case 'w':
-  		  //anda pra frente
-  		  glutPostRedisplay();
-  		  break;
-  	  case 's':
-  		  //anda pra trás
-  		  glutPostRedisplay();
-  		  break;
-  	  case 'a':
-  		  //anda pra esquerda
-  		  glutPostRedisplay();
-  		  break;
-  	  case 'd':
-  		  //anda pra direita
-  		  glutPostRedisplay();
-  		  break;
-  	  case ' ':
-  		  //pula
-  		  glutPostRedisplay();
-  		  break;
-  	  default:
-  		  break;
-  }
+//callback do teclado
+//trata eventos das setinhas quando pressionadas
+void specialKeys(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_LEFT:
+
+        	//moveObjectX(objectSpeed * (-1));
+        	break;
+
+        case GLUT_KEY_RIGHT:
+
+        	//moveObjectX(objectSpeed);
+        	break;
+
+        case GLUT_KEY_UP:
+
+        	//jump = true;
+            break;
+
+        case GLUT_KEY_DOWN:
+
+        	if(run){
+
+        		//run = false;
+        		//objectSpeed = 0.7f;
+        	}
+        	else{
+
+        		//run = true;
+        		//objectSpeed = 1.4f;
+        	}
+
+        	break;
+
+    }
+
+    //redesenha a cena
+    glutPostRedisplay();
 }
 
 void moeda(){
