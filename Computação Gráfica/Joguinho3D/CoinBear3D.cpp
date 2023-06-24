@@ -2,6 +2,7 @@
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
+#include <math.h>
 #include <iostream>
 #endif
 
@@ -16,14 +17,51 @@ GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat direction[] = { 0.0, 0.0, 10.0, 1.0 };
 GLfloat direction1[] = { 0.0,0.0, 10.0, 1.0 };
 
+float minX = -10, maxX =10;
+float minZ = -10, maxZ =10;
 float startX = 0, startY = 0, startZ = 0;
-float objectSpeed = 1.5f;
-float objectX = 0, objectY = 0;
+float objectSpeed = 1.5f, objectDir = 0.0f;
+float objectX = 0, objectZ = 0;
 float olhoX = 0, olhoZ = 0,olhoY = 10, centroY=1, upX=1,upY=1,upZ=1;
+const double PI = 3.141592654;
 
-/*void moveObjectForward(float objectSpeedLocal){
+void moveObjectX(float objectSpeedLocal) {
 
-}*/
+    float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
+
+    objectX += dX;
+
+    if (objectX < minX) {
+
+        objectX = maxX;
+
+    }
+
+    if (objectX > maxX) {
+
+        objectX = minX;
+
+    }
+
+}
+
+void moveObjectZ(float objectSpeedLocal){
+	 float dz = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
+
+	    objectZ += dz;
+
+	    if (objectZ < minZ) {
+
+	        objectZ = maxZ;
+
+	    }
+
+	    if (objectZ > maxZ) {
+
+	        objectZ = minZ;
+
+	    }
+}
 
 void primitivaQ(){
 	glutSolidCube(1);
@@ -43,17 +81,17 @@ void specialKeys(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
 
-        	//moveObjectX(objectSpeed * (-1));
+        	moveObjectX(objectSpeed * (-1));
         	break;
 
         case GLUT_KEY_RIGHT:
 
-        	//moveObjectX(objectSpeed);
+        	moveObjectX(objectSpeed);
         	break;
 
-        case GLUT_KEY_UP:
+        case 'c':
         	cout << "teste" << endl;
-        	if(olhoY == 10){
+        	if(olhoY == 23){
         		olhoY = 0;
         		olhoX = 3;
         		olhoZ = 0;
@@ -62,7 +100,7 @@ void specialKeys(int key, int x, int y) {
         		upY=0;
         		upZ=0;
         	}else if(olhoY == 0){
-        		olhoY = 10;
+        		olhoY = 23;
         		olhoX = 0;
         		centroY = 1;
         		upX=1;
@@ -71,8 +109,12 @@ void specialKeys(int key, int x, int y) {
         	}
             break;
 
+        case GLUT_KEY_UP:
+        	moveObjectZ(objectSpeed*(1));
+        	break;
         case GLUT_KEY_DOWN:
-
+        	moveObjectZ(objectSpeed*(-1));
+        	break;
         	//if(run){
 
         		//run = false;
@@ -121,6 +163,7 @@ void chao(){
 }
 
 void arvore(){
+	glScalef(0.5,0.5,0.5);
 	glPushMatrix();
 	glColor3f(0.5, 0.35, 0.05);
 	glScalef(1.2,3,1.2);
@@ -203,7 +246,7 @@ void display() {
 	chao();
 	glPopMatrix();
 
-	/*glPushMatrix();
+	glPushMatrix();
 	glTranslatef(0,1.5,0);
 	arvore();
 	glPopMatrix();
@@ -216,9 +259,10 @@ void display() {
 	glPushMatrix();
 	glTranslatef(0,1.5,3);
 	arvore();
-	glPopMatrix();*/
+	glPopMatrix();
 
 	glPushMatrix();
+	glTranslatef(objectX,0,objectZ);
 	urso();
 	glPopMatrix();
 
