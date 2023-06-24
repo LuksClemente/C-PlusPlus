@@ -2,8 +2,10 @@
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
+#include <iostream>
 #endif
 
+using namespace std;
 
 GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat pink[] = { 1.0, 0.5, 1.0, 1.0 };
@@ -14,6 +16,14 @@ GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat direction[] = { 0.0, 0.0, 10.0, 1.0 };
 GLfloat direction1[] = { 0.0,0.0, 10.0, 1.0 };
 
+float startX = 0, startY = 0, startZ = 0;
+float objectSpeed = 1.5f;
+float objectX = 0, objectY = 0;
+float olhoX = 0, olhoZ = 0,olhoY = 10, centroY=1, upX=1,upY=1,upZ=1;
+
+/*void moveObjectForward(float objectSpeedLocal){
+
+}*/
 
 void primitivaQ(){
 	glutSolidCube(1);
@@ -42,8 +52,23 @@ void specialKeys(int key, int x, int y) {
         	break;
 
         case GLUT_KEY_UP:
-
-        	//jump = true;
+        	cout << "teste" << endl;
+        	if(olhoY == 10){
+        		olhoY = 0;
+        		olhoX = 3;
+        		olhoZ = 0;
+        		centroY = 0;
+        		upX=1;
+        		upY=0;
+        		upZ=0;
+        	}else if(olhoY == 0){
+        		olhoY = 10;
+        		olhoX = 0;
+        		centroY = 1;
+        		upX=1;
+        		upY=1;
+        		upZ=1;
+        	}
             break;
 
         case GLUT_KEY_DOWN:
@@ -60,6 +85,8 @@ void specialKeys(int key, int x, int y) {
         	//}
 
         	break;
+
+
 
     }
 
@@ -86,6 +113,7 @@ void chao(){
 
 	 glPushMatrix();
 	 glScalef(20, 0.1, 20);
+	 glColor3f(1,1,1);
 	 //glTranslatef(0.05, 1.9, 0.8);
 	 glutSolidCube(1);
 	 glPopMatrix();
@@ -109,7 +137,7 @@ void arvore(){
 }
 
 void urso(){
-	glPushMatrix();
+	/*glPushMatrix();
 	glColor3f(0.5, 0.35, 0.05);
 	glScalef(0.5,1.3,0.5);
 	primitivaQ();
@@ -143,6 +171,18 @@ void urso(){
 	primitivaQ();
 	glPopMatrix();
 
+	glPushMatrix();
+	glColor3f(0.5,0.35,0.05);
+	glScalef(1,1,1);
+	glTranslatef(0,0,5);
+	primitivaQ();
+	glPopMatrix();*/
+
+	glPushMatrix();
+	glColor3f(0.5,0.35,0.05);
+	primitivaQ();
+	glPopMatrix();
+
 }
 
 void display() {
@@ -150,7 +190,7 @@ void display() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(10,10,10,0,0,0,0,1,0);
+	gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
 	glPushMatrix();
 
 	//glEnable(GL_LIGHT1);
@@ -159,11 +199,11 @@ void display() {
 	// Rotate the scene so we can see the tops of the shapes.
 	//glRotatef(35.0, 1.0, 1.0, 0.0);
 
-	/*glPushMatrix();
+	glPushMatrix();
 	chao();
 	glPopMatrix();
 
-	glPushMatrix();
+	/*glPushMatrix();
 	glTranslatef(0,1.5,0);
 	arvore();
 	glPopMatrix();
@@ -177,15 +217,10 @@ void display() {
 	glTranslatef(0,1.5,3);
 	arvore();
 	glPopMatrix();*/
+
 	glPushMatrix();
 	urso();
 	glPopMatrix();
-
-
-
-
-
-
 
 
 
@@ -253,6 +288,7 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("CoinBear3D");
 	glutReshapeFunc(reshape);
+	glutSpecialFunc(specialKeys);
 	glutDisplayFunc(display);
 	init();
 	glutMainLoop();
