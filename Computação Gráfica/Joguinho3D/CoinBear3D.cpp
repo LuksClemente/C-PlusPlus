@@ -22,7 +22,7 @@ float minZ = -10, maxZ =10;
 float startX = 0, startY = 0, startZ = 0;
 float objectSpeed = 1.5f, objectDir = 0.0f;
 float objectX = 0, objectZ = 0;
-float olhoX = 0, olhoZ = 0,olhoY = 10, centroY=1, upX=1,upY=1,upZ=1;
+float olhoX = 0, olhoZ = 0,olhoY = 20, centroY=1, upX=1,upY=1,upZ=1;
 const double PI = 3.141592654;
 
 void moveObjectX(float objectSpeedLocal) {
@@ -81,37 +81,18 @@ void specialKeys(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
 
-        	moveObjectX(objectSpeed * (-1));
+        	moveObjectX(objectSpeed);
         	break;
 
         case GLUT_KEY_RIGHT:
 
-        	moveObjectX(objectSpeed);
+        	moveObjectX(objectSpeed * (-1));
         	break;
-
-        case 'c':
-        	cout << "teste" << endl;
-        	if(olhoY == 23){
-        		olhoY = 0;
-        		olhoX = 3;
-        		olhoZ = 0;
-        		centroY = 0;
-        		upX=1;
-        		upY=0;
-        		upZ=0;
-        	}else if(olhoY == 0){
-        		olhoY = 23;
-        		olhoX = 0;
-        		centroY = 1;
-        		upX=1;
-        		upY=1;
-        		upZ=1;
-        	}
-            break;
 
         case GLUT_KEY_UP:
         	moveObjectZ(objectSpeed*(1));
         	break;
+
         case GLUT_KEY_DOWN:
         	moveObjectZ(objectSpeed*(-1));
         	break;
@@ -149,13 +130,41 @@ void moeda(){
 	  glPopMatrix();
 }
 
+void keyboard(unsigned char key, int x, int y) {
+    switch (key) {
+    	case 'c':
+    		cout << "teste" << endl;
+            if(olhoY == 20){
+            	olhoY = 0;
+            	olhoX = 3;
+            	olhoZ = 0;
+            	centroY = 0;
+            	upX=1;
+            	upY=0;
+            	upZ=0;
+            }else if(olhoY == 0){
+            	olhoY = 20;
+            	olhoX = 0;
+            	centroY = 1;
+            	upX=1;
+            	upY=1;
+            	upZ=1;
+            }
+            break;
+
+    }
+
+    //redesenha a cena
+    glutPostRedisplay();
+}
+
 void chao(){
 
 	//glRotatef(35.0, 1.0, 1.0, 0.0);
 
 	 glPushMatrix();
 	 glScalef(20, 0.1, 20);
-	 glColor3f(1,1,1);
+	 glColor3f(0,0.5,0);
 	 //glTranslatef(0.05, 1.9, 0.8);
 	 glutSolidCube(1);
 	 glPopMatrix();
@@ -233,7 +242,8 @@ void display() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
+	//gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
+	gluLookAt(olhoX + objectX,olhoY,olhoZ + objectZ,0,centroY,0,upX,upY,upZ);
 	glPushMatrix();
 
 	//glEnable(GL_LIGHT1);
@@ -333,6 +343,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("CoinBear3D");
 	glutReshapeFunc(reshape);
 	glutSpecialFunc(specialKeys);
+	glutKeyboardFunc(keyboard);
 	glutDisplayFunc(display);
 	init();
 	glutMainLoop();
