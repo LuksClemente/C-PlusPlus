@@ -17,6 +17,8 @@ GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat direction[] = { 0.0, 0.0, 10.0, 1.0 };
 GLfloat direction1[] = { 0.0,0.0, 10.0, 1.0 };
 
+int numFrame = 0;
+int playerScore = 0;
 float minX = -10, maxX =10;
 float minZ = -10, maxZ =10;
 float startX = 0, startY = 0, startZ = 0;
@@ -24,6 +26,18 @@ float objectSpeed = 1.5f, objectDir = 0.0f;
 float objectX = 0, objectZ = 0;
 float olhoX = 0, olhoZ = 0,olhoY = 20, centroY=1, upX=1,upY=1,upZ=1;
 const double PI = 3.141592654;
+bool gameOver = false;
+bool bigornaVisivel = false;
+bool moedaVisivel = false;
+bool bigornaPega = false;
+bool moedaPega = false;
+float moedaX = 0;
+float moedaY = 15;
+float moedaZ = 0;
+float bigornaX = 0;
+float bigornaY = 5;
+float bigornaZ = 0;
+
 
 void moveObjectX(float objectSpeedLocal) {
 
@@ -117,7 +131,7 @@ void specialKeys(int key, int x, int y) {
     glutPostRedisplay();
 }
 
-void moeda(){
+void primitivaMoeda(){
 	  glPushMatrix();
 	  glTranslatef(0,-0.03,0);
 	  glScalef(0.2,0.05,0.2);
@@ -237,13 +251,55 @@ void urso(){
 
 }
 
+void moeda(){
+
+	moedaY = moedaY - 0.3;
+
+	glPushMatrix();
+	glColor3f(1,0.8,0);
+	primitivaMoeda();
+	glPopMatrix();
+
+	glPushMatrix();
+	glScalef(0.8, 0.8, 1);
+	glColor3f(1,1,0);
+	primitivaMoeda();
+	glColor3f(0,0,0);
+	glPopMatrix();
+
+	 if(moedaY <= 0){
+
+		 moedaVisivel = false;
+	     moedaY = 60;
+	 }
+}
+
+void bigorna(){
+
+	bigornaY = bigornaY - 0.3;
+
+	glPushMatrix();
+	glColor3f(0.4,0.4,0.4);
+	primitivaQ();
+	glPopMatrix();
+
+	if(bigornaY <= 0){
+
+		bigornaVisivel = false;
+		bigornaY = 60;
+	}
+
+}
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	//gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
-	gluLookAt(olhoX + objectX,olhoY,olhoZ + objectZ,0,centroY,0,upX,upY,upZ);
+	gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
+	//gluLookAt(olhoX + objectX,olhoY,olhoZ + objectZ,0,centroY,0,upX,upY,upZ);
+	//gluLookAt(objectX, olhoY, objectZ, objectX, centroY, objectZ - 10, upX, upY, upZ);
+	//gluLookAt(0, olhoY, 10, objectX, centroY, objectZ, upX, upY, upZ);
 	glPushMatrix();
 
 	//glEnable(GL_LIGHT1);
@@ -276,11 +332,79 @@ void display() {
 	urso();
 	glPopMatrix();
 
+	//desenha a moeda
+	if(moedaVisivel){
 
+		glPushMatrix();
+		glTranslatef(moedaX,2,moedaZ);
+		glScalef(0.7, 0.7, 1);
+		//pegaMoeda();
+		moeda();
+		glPopMatrix();
+	}
+
+	//desenha a bigorna
+	if(bigornaVisivel){
+
+		glPushMatrix();
+		glTranslatef(bigornaX,2,bigornaZ);
+		glScalef(1.3, 0.7, 1);
+		//pegaBigorna();
+		bigorna();
+		glPopMatrix();
+	}
 
 	glFlush();
 }
 
+// atualiza a lógica do jogo e controla o fluxo de frames
+void doFrame(int v) {
+
+	//incrementa o número de frames
+    numFrame++;
+
+    //gera um número aleatório entre 0 e 1
+    float rand = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
+
+    //torna a moeda visível a cada 150 frames
+    if (numFrame % 150 == 0){
+
+    	//define um momento aleatório para a moeda ficar visível
+    	if((moedaVisivel == false)&&(rand > 0.4)){
+
+    		moedaVisivel = true;
+    		moedaX = objectX + 1;
+    		moedaY = 15;
+    		moedaZ = objectZ + 1;
+    	}
+    }
+
+    //torna a bigorna visível a cada 150 frames
+    if (numFrame % 150 == 0){
+
+    	//define um momento aleatório para a bigorna ficar visível
+    	if((bigornaVisivel == false)&&(rand <= 0.4)){
+
+        	bigornaVisivel = true;
+        	bigornaX = objectX + 1;
+        	bigornaY = 15;
+        	bigornaZ = objectZ + 1;
+        }
+    }
+
+    //encerra o jogo caso o placar fique negativo
+    if(playerScore < 0){
+
+    	gameOver = true;
+
+    	return;
+
+    }
+
+    //redesenha a cena
+    glutPostRedisplay();
+    glutTimerFunc(20,doFrame,0);
+}
 
 void reshape(GLint w, GLint h) {
 	glViewport(0, 0, w, h);
@@ -341,10 +465,17 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(80, 80);
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("CoinBear3D");
-	glutReshapeFunc(reshape);
+
+	init();
+
+	glutDisplayFunc(display);
+
 	glutSpecialFunc(specialKeys);
 	glutKeyboardFunc(keyboard);
-	glutDisplayFunc(display);
-	init();
+
+	glutTimerFunc(20,doFrame,0);
+
+	glutReshapeFunc(reshape);
+
 	glutMainLoop();
 }
