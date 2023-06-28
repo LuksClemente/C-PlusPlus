@@ -131,6 +131,17 @@ void specialKeys(int key, int x, int y) {
     glutPostRedisplay();
 }
 
+//função que escreve a string indicada na tela
+void drawText(const string& text, float x, float y) {
+
+	glRasterPos2f(x, y);
+
+    for (const char& c : text) {
+
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+}
+
 void primitivaMoeda(){
 	  glPushMatrix();
 	  glTranslatef(0,-0.03,0);
@@ -291,6 +302,30 @@ void bigorna(){
 
 }
 
+//função que trata a colisão do personagem com o objeto moeda
+void pegaMoeda(){
+
+	if(((moedaX <= objectX + 3)&&(moedaX >= objectX + 1))&&(moedaY <= 1)){
+
+		moedaPega = true;
+		playerScore++;
+		moedaVisivel = false;
+	}
+
+}
+
+//função que trata a colisão do personagem com o objeto bigorna
+void pegaBigorna(){
+
+	if(((bigornaX <= objectX + 1)&&(bigornaX >= objectX - 1))&&(bigornaY <= 1)){
+
+		bigornaPega = true;
+		playerScore--;
+		bigornaVisivel = false;
+	}
+
+}
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -351,6 +386,27 @@ void display() {
 		glScalef(1.3, 0.7, 1);
 		//pegaBigorna();
 		bigorna();
+		glPopMatrix();
+	}
+
+	//desenha a tela de "game over"
+	if(gameOver){
+
+		glLoadIdentity();
+		glPushMatrix();
+		glTranslatef(0.0f, 5.0f, 0.0f);
+		glColor3f(1, 0, 0);
+		drawText("GAME OVER! MUITO RUIM KK NUB XD!", 0.0f, 0.0f);
+		glPopMatrix();
+	}
+	//desenha o score
+	else{
+		glLoadIdentity();
+		glPushMatrix();
+		glTranslatef(0.0f, 5.0f, 0.0f);
+		string scoreText = "Score: " + to_string(playerScore);
+		glColor3f(1, 0, 0);
+		drawText(scoreText, 0.0f, 0.0f);
 		glPopMatrix();
 	}
 
