@@ -188,13 +188,13 @@ void specialKeys(int key, int x, int y) {
 
         	cout << "Rodei para a esquerda" << endl;
         	aux += 1;
-        	//moveObjectX(objectSpeed);
+        	moveObjectX(objectSpeed);
         	break;
 
         case GLUT_KEY_RIGHT:
         	aux-=1;
         	cout << "Rodei para a direita" << endl;
-        	//moveObjectX(objectSpeed * (-1));
+        	moveObjectX(objectSpeed * (-1));
         	break;
 
         case GLUT_KEY_UP:
