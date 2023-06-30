@@ -26,7 +26,7 @@ float minZ = -10, maxZ =10;
 float startX = 0, startY = 0, startZ = 0;
 float objectSpeed = 1.0f, objectDir = 0.0f;
 float objectX = 0, objectZ = 0;
-float olhoX = 0, olhoZ = 0,olhoY = 20, centroY=1, upX=1,upY=1,upZ=1;
+float olhoX = 0, olhoZ = 0,olhoY = 20, centroX = 0, centroY=1, centroZ = 0, upX=1,upY=1,upZ=1;
 const double PI = 3.141592654;
 bool gameOver = false;
 bool bigornaVisivel = false;
@@ -39,6 +39,8 @@ float moedaZ = 0;
 float bigornaX = 0;
 float bigornaY = 5;
 float bigornaZ = 0;
+bool pov = false;
+float aux = 0;
 
 GLuint texID[6];  // Texture ID's for the three textures.
 
@@ -90,6 +92,7 @@ void moveObjectX(float objectSpeedLocal) {
     float dX = objectSpeedLocal * cosf(objectDir * PI / 180.0f);
 
     objectX += dX;
+
 
     if (objectX < minX) {
 
@@ -176,18 +179,22 @@ void primitivaT(){
 	glutSolidTorus(0.5, 1, 20, 20);
 }
 
+
 //callback do teclado
 //trata eventos das setinhas quando pressionadas
 void specialKeys(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
 
-        	moveObjectX(objectSpeed);
+        	cout << "Rodei para a esquerda" << endl;
+        	aux += 1;
+        	//moveObjectX(objectSpeed);
         	break;
 
         case GLUT_KEY_RIGHT:
-
-        	moveObjectX(objectSpeed * (-1));
+        	aux-=1;
+        	cout << "Rodei para a direita" << endl;
+        	//moveObjectX(objectSpeed * (-1));
         	break;
 
         case GLUT_KEY_UP:
@@ -248,12 +255,18 @@ void keyboard(unsigned char key, int x, int y) {
     		cout << "teste" << endl;
             if(olhoY == 20){
             	olhoY = 1.5;
-            	olhoX = 3;
-            	olhoZ = 1.5;
+            	olhoX = objectX;
+            	olhoZ = objectZ;
+            	centroX = cos(aux * PI/180);
             	centroY = 0;
             	upX=2;
             	upY=2;
             	upZ=2;
+            	if(pov == true){
+            		pov = false;
+            	}else{
+            		pov = true;
+            	}
             }else if(olhoY == 1.5){
             	olhoY = 20;
             	olhoX = 0;
@@ -425,7 +438,11 @@ void display() {
 
 	//glEnable(GL_COLOR_MATERIAL);
 	//gluLookAt(olhoX, olhoY, olhoZ, objectX, centroY,objectZ, upX,upY,upZ);
-	gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
+	if(pov == false){
+		gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
+	}else{
+		gluLookAt(objectX,olhoY,objectZ,aux,centroY,0,upX,upY,upZ);
+	}
 	glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
 	//gluLookAt(olhoX + objectX,olhoY,olhoZ + objectZ,0,centroY,0,upX,upY,upZ);
