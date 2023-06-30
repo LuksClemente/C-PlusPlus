@@ -17,7 +17,7 @@ GLfloat yellow[] = { 1.0, 1.0, 0.0, 1.0 };
 GLfloat cyan[] = { 0.0, 1.0, 1.0, 1.0 };
 GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat direction[] = { 0.0, 0.0, 10.0, 1.0 };
-GLfloat direction1[] = { 0.0,0.0, 10.0, 1.0 };
+GLfloat direction1[] = { 0.0,1.0, 15.0, 1.0 };
 
 int numFrame = 0;
 int playerScore = 0;
@@ -96,13 +96,13 @@ void moveObjectX(float objectSpeedLocal) {
 
     if (objectX < minX) {
 
-        objectX = maxX;
+        objectX = minX;
 
     }
 
     if (objectX > maxX) {
 
-        objectX = minX;
+        objectX = maxX;
 
     }
 
@@ -115,13 +115,13 @@ void moveObjectZ(float objectSpeedLocal){
 
 	    if (objectZ < minZ) {
 
-	        objectZ = maxZ;
+	        objectZ = minZ;
 
 	    }
 
 	    if (objectZ > maxZ) {
 
-	        objectZ = minZ;
+	        objectZ = maxZ;
 
 	    }
 }
@@ -198,10 +198,18 @@ void specialKeys(int key, int x, int y) {
         	break;
 
         case GLUT_KEY_UP:
+
+        	//para deixar como antes, comente a linha de baixo
+        	aux += 1;
+
         	moveObjectZ(objectSpeed*(1));
         	break;
 
         case GLUT_KEY_DOWN:
+
+        	//para deixar como antes, comente a linha de baixo
+        	aux-=1;
+
         	moveObjectZ(objectSpeed*(-1));
         	break;
         	//if(run){
@@ -226,7 +234,7 @@ void specialKeys(int key, int x, int y) {
 }
 
 //função que escreve a string indicada na tela
-void drawText(const string& text, float x, float y) {
+/*void drawText(const string& text, float x, float y) {
 
 	glRasterPos2f(x, y);
 
@@ -234,7 +242,7 @@ void drawText(const string& text, float x, float y) {
 
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
     }
-}
+}*/
 
 void primitivaMoeda(){
 	  glPushMatrix();
@@ -259,6 +267,7 @@ void keyboard(unsigned char key, int x, int y) {
             	olhoZ = objectZ;
             	centroX = cos(aux * PI/180);
             	centroY = 0;
+            	centroZ = cos(aux * PI/180);
             	upX=2;
             	upY=2;
             	upZ=2;
@@ -368,7 +377,7 @@ void urso(){
 
 void moeda(){
 
-	moedaY = moedaY - 0.3;
+	moedaZ = moedaZ - 0.3;
 
 	glPushMatrix();
 	glColor3f(1,0.8,0);
@@ -382,26 +391,26 @@ void moeda(){
 	glColor3f(0,0,0);
 	glPopMatrix();
 
-	 if(moedaY <= 0){
+	 if(moedaZ <= -10){
 
 		 moedaVisivel = false;
-	     moedaY = 60;
+	     moedaZ = 60;
 	 }
 }
 
 void bigorna(){
 
-	bigornaY = bigornaY - 0.3;
+	bigornaZ = bigornaZ - 0.3;
 
 	glPushMatrix();
 	glColor3f(0.4,0.4,0.4);
 	primitivaQ();
 	glPopMatrix();
 
-	if(bigornaY <= 0){
+	if(bigornaZ <= -10){
 
 		bigornaVisivel = false;
-		bigornaY = 60;
+		bigornaZ = 60;
 	}
 
 }
@@ -409,7 +418,7 @@ void bigorna(){
 //função que trata a colisão do personagem com o objeto moeda
 void pegaMoeda(){
 
-	if(((moedaX <= objectX + 3)&&(moedaX >= objectX + 1))&&(moedaY <= 1)){
+	if(((moedaX <= objectX + 0.75)&&(moedaX >= objectX - 0.75))&&((moedaZ <= objectZ + 0.75)&&(moedaZ >= objectZ - 0.75))){
 
 		moedaPega = true;
 		playerScore++;
@@ -421,10 +430,10 @@ void pegaMoeda(){
 //função que trata a colisão do personagem com o objeto bigorna
 void pegaBigorna(){
 
-	if(((bigornaX <= objectX + 1)&&(bigornaX >= objectX - 1))&&(bigornaY <= 1)){
+	if(((bigornaX <= objectX + 0.75)&&(bigornaX >= objectX - 0.75))&&((bigornaZ <= objectZ + 0.75)&&(bigornaZ >= objectZ - 0.75))){
 
 		bigornaPega = true;
-		playerScore--;
+		playerScore = playerScore - 3;
 		bigornaVisivel = false;
 	}
 
@@ -441,7 +450,9 @@ void display() {
 	if(pov == false){
 		gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
 	}else{
-		gluLookAt(objectX,olhoY,objectZ,aux,centroY,0,upX,upY,upZ);
+		//gluLookAt(objectX,olhoY,objectZ,aux,centroY,0,upX,upY,upZ);
+		gluLookAt(objectX,olhoY,objectZ,centroX,centroY,centroZ,upX,upY,upZ);
+
 	}
 	glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
@@ -463,19 +474,19 @@ void display() {
 
 	//glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
-	glTranslatef(0,1.5,0);
+	glTranslatef(0,1.0,0);
 	arvore();
 	glPopMatrix();
 
 	//glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
-	glTranslatef(3,1.5,0);
+	glTranslatef(3,1.0,0);
 	arvore();
 	glPopMatrix();
 
 	//glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
-	glTranslatef(0,1.5,3);
+	glTranslatef(0,1.0,3);
 	arvore();
 	glPopMatrix();
 
@@ -490,9 +501,9 @@ void display() {
 
 		glBindTexture( GL_TEXTURE_2D, texID[3] );
 		glPushMatrix();
-		glTranslatef(moedaX,2,moedaZ);
+		glTranslatef(moedaX,0.5,moedaZ);
 		glScalef(0.7, 0.7, 1);
-		//pegaMoeda();
+		pegaMoeda();
 		moeda();
 		glPopMatrix();
 	}
@@ -501,9 +512,9 @@ void display() {
 	if(bigornaVisivel){
 		glBindTexture( GL_TEXTURE_2D, texID[0] );
 		glPushMatrix();
-		glTranslatef(bigornaX,2,bigornaZ);
+		glTranslatef(bigornaX,0.5,bigornaZ);
 		glScalef(1.3, 0.7, 1);
-		//pegaBigorna();
+		pegaBigorna();
 		bigorna();
 		glPopMatrix();
 	}
@@ -511,21 +522,23 @@ void display() {
 	//desenha a tela de "game over"
 	if(gameOver){
 
-		glLoadIdentity();
+		/*glLoadIdentity();
 		glPushMatrix();
-		glTranslatef(0.0f, 5.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 0.0f);
 		glColor3f(1, 0, 0);
-		drawText("GAME OVER! MUITO RUIM KK NUB XD!", 0.0f, 0.0f);
-		glPopMatrix();
+		//drawText("GAME OVER! MUITO RUIM KK NUB XD!", 0.0f, 0.0f);
+
+		glPopMatrix();*/
 	}
 	//desenha o score
 	else{
 		glLoadIdentity();
 		glPushMatrix();
-		glTranslatef(0.0f, 5.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 0.0f);
 		string scoreText = "Score: " + to_string(playerScore);
+		cout<<scoreText<<endl;
 		glColor3f(1, 0, 0);
-		drawText(scoreText, 0.0f, 0.0f);
+		//drawText(scoreText, 0.0f, 0.0f);
 		glPopMatrix();
 	}
 
@@ -548,9 +561,9 @@ void doFrame(int v) {
     	if((moedaVisivel == false)&&(rand > 0.4)){
 
     		moedaVisivel = true;
-    		moedaX = objectX + 1;
-    		moedaY = 5;
-    		moedaZ = objectZ + 1;
+    		moedaX = objectX;
+    		moedaY = 1.5;
+    		moedaZ = objectZ + 10;
     	}
     }
 
@@ -561,9 +574,9 @@ void doFrame(int v) {
     	if((bigornaVisivel == false)&&(rand <= 0.4)){
 
         	bigornaVisivel = true;
-        	bigornaX = objectX + 1;
-        	bigornaY = 5;
-        	bigornaZ = objectZ + 1;
+        	bigornaX = objectX;
+        	bigornaY = 1.5;
+        	bigornaZ = objectZ + 10;
         }
     }
 
@@ -571,6 +584,7 @@ void doFrame(int v) {
     if(playerScore < 0){
 
     	gameOver = true;
+    	cout<<"Game Over"<<endl;
 
     	return;
 
@@ -603,23 +617,31 @@ void reshape(GLint w, GLint h) {
 void init() {
 
 	glEnable(GL_TEXTURE_GEN_S);
-	 glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_T);
 	glMatrixMode(GL_MODELVIEW);
-	     glLoadIdentity();
+	glLoadIdentity();
+
+	glClearColor(0.2,0,1,0);
 
 
-	     glLightfv(GL_LIGHT0, GL_AMBIENT, white);
-	     glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-	     glLightfv(GL_LIGHT0, GL_SPECULAR, white);
-	     glLightfv(GL_LIGHT0, GL_POSITION, direction);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, white);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+	glLightfv(GL_LIGHT0, GL_POSITION, direction);
 
-	     glEnable(GL_LIGHTING);
-	     glEnable(GL_DEPTH_TEST);
-	     glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, white);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, white);
+	glLightfv(GL_LIGHT1, GL_POSITION, direction1);
 
-	     glEnable(GL_BLEND);
-	     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	     glEnable(GL_NORMALIZE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_NORMALIZE);
 
 }
 
