@@ -4,6 +4,8 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #endif
 
 using namespace std;
@@ -22,7 +24,7 @@ int playerScore = 0;
 float minX = -10, maxX =10;
 float minZ = -10, maxZ =10;
 float startX = 0, startY = 0, startZ = 0;
-float objectSpeed = 1.5f, objectDir = 0.0f;
+float objectSpeed = 1.0f, objectDir = 0.0f;
 float objectX = 0, objectZ = 0;
 float olhoX = 0, olhoZ = 0,olhoY = 20, centroY=1, upX=1,upY=1,upZ=1;
 const double PI = 3.141592654;
@@ -37,6 +39,50 @@ float moedaZ = 0;
 float bigornaX = 0;
 float bigornaY = 5;
 float bigornaZ = 0;
+
+GLuint texID[6];  // Texture ID's for the three textures.
+
+char* textureFileNames[6] = {   // file names for the files from which texture images are loaded
+            "texturas/texturaferro.jpg",
+			"texturas/texturafolhas.jpg",
+			"texturas/texturagrama.jpg",
+			"texturas/texturaouro.jpg",
+			"texturas/texturatronco.jpg",
+			"texturas/texturaurso.jpg"
+       };
+
+void loadTextures() {
+	int width, height, nrChannels;
+	unsigned char *data;
+
+	glGenTextures(6, texID);
+
+	for(int i = 0; i < 6;i++)
+	{
+		glBindTexture(GL_TEXTURE_2D, texID[i]);
+		// set the texture wrapping/filtering options (on the currently bound texture object)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// load and generate the texture
+
+		data = stbi_load(textureFileNames[i], &width, &height, &nrChannels, 0);
+
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			//glGenerateMipmap(GL_TEXTURE_2D);
+			//glTexParameteri  (GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE );
+		}
+		else
+		{
+			 printf("Failed to load texture\n");
+		}
+		stbi_image_free(data);
+	}
+
+}
 
 
 void moveObjectX(float objectSpeedLocal) {
@@ -78,7 +124,48 @@ void moveObjectZ(float objectSpeedLocal){
 }
 
 void primitivaQ(){
-	glutSolidCube(1);
+	glBegin(GL_QUADS);
+	glNormal3f(0,1,0);
+	glVertex3f(0.5, 0.5, -0.5);
+	glVertex3f(-0.5, 0.5, -0.5);
+	glVertex3f(-0.5, 0.5, 0.5);
+	glVertex3f(0.5, 0.5, 0.5);
+	//glEnd();
+	//glBegin(GL_QUADS);
+	glNormal3f(1,0,0);
+	glVertex3f(0.5, 0.5, -0.5);
+	glVertex3f(0.5, -0.5, -0.5);
+	glVertex3f(0.5, -0.5, 0.5);
+	glVertex3f(0.5, 0.5, 0.5);
+	//glEnd();
+	//glBegin(GL_QUADS);
+	glNormal3f(0,-1,0);
+	glVertex3f(0.5, -0.5, 0.5);
+	glVertex3f(0.5, -0.5, -0.5);
+	glVertex3f(-0.5, -0.5, 0.5);
+	glVertex3f(-0.5, -0.5, -0.5);
+	//glEnd();
+	//glBegin(GL_QUADS);
+	glNormal3f(0,0,-1);
+	glVertex3f(0.5, -0.5, -0.5);
+	glVertex3f(0.5, 0.5,-0.5);
+	glVertex3f(-0.5, 0.5, -0.5);
+	glVertex3f(-0.5, -0.5, -0.5);
+	//glEnd();
+	//glBegin(GL_QUADS);
+	glNormal3f(-1,0,0);
+	glVertex3f(-0.5, -0.5, 0.5);
+	glVertex3f(-0.5, 0.5,0.5);
+	glVertex3f(-0.5, 0.5, -0.5);
+	glVertex3f(-0.5, -0.5, -0.5);
+	//glEnd();
+	//glBegin(GL_QUADS);
+	glNormal3f(0,0,1);
+	glVertex3f(0.5, -0.5, 0.5);
+	glVertex3f(0.5, 0.5,0.5);
+	glVertex3f(-0.5, 0.5, 0.5);
+	glVertex3f(-0.5, -0.5, 0.5);
+	glEnd();
 }
 
 void primitivaC(){
@@ -328,10 +415,14 @@ void pegaBigorna(){
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	glEnable(GL_TEXTURE_2D);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	//glEnable(GL_COLOR_MATERIAL);
 	gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
+	glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
 	//gluLookAt(olhoX + objectX,olhoY,olhoZ + objectZ,0,centroY,0,upX,upY,upZ);
 	//gluLookAt(objectX, olhoY, objectZ, objectX, centroY, objectZ - 10, upX, upY, upZ);
 	//gluLookAt(0, olhoY, 10, objectX, centroY, objectZ, upX, upY, upZ);
@@ -343,33 +434,39 @@ void display() {
 	// Rotate the scene so we can see the tops of the shapes.
 	//glRotatef(35.0, 1.0, 1.0, 0.0);
 
+	glBindTexture( GL_TEXTURE_2D, texID[2] );
 	glPushMatrix();
 	chao();
 	glPopMatrix();
 
+	glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glTranslatef(0,1.5,0);
 	arvore();
 	glPopMatrix();
 
+	glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glTranslatef(3,1.5,0);
 	arvore();
 	glPopMatrix();
 
+	glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glTranslatef(0,1.5,3);
 	arvore();
 	glPopMatrix();
 
+	glBindTexture( GL_TEXTURE_2D, texID[5] );
 	glPushMatrix();
-	glTranslatef(objectX,0,objectZ);
+	glTranslatef(objectX,0.5,objectZ);
 	urso();
 	glPopMatrix();
 
 	//desenha a moeda
 	if(moedaVisivel){
 
+		glBindTexture( GL_TEXTURE_2D, texID[3] );
 		glPushMatrix();
 		glTranslatef(moedaX,2,moedaZ);
 		glScalef(0.7, 0.7, 1);
@@ -380,7 +477,7 @@ void display() {
 
 	//desenha a bigorna
 	if(bigornaVisivel){
-
+		glBindTexture( GL_TEXTURE_2D, texID[0] );
 		glPushMatrix();
 		glTranslatef(bigornaX,2,bigornaZ);
 		glScalef(1.3, 0.7, 1);
@@ -460,6 +557,7 @@ void doFrame(int v) {
     //redesenha a cena
     glutPostRedisplay();
     glutTimerFunc(20,doFrame,0);
+    glutSwapBuffers();
 }
 
 void reshape(GLint w, GLint h) {
@@ -482,48 +580,37 @@ void reshape(GLint w, GLint h) {
 
 void init() {
 
+	glEnable(GL_TEXTURE_GEN_S);
+	 glEnable(GL_TEXTURE_GEN_T);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	     glLoadIdentity();
 
-	//glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cyan);
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, white);
-	//glMaterialf(GL_FRONT, GL_SHININESS, 30);
 
-	glLightfv(GL_LIGHT1, GL_AMBIENT, black);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, yellow);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, white);
-	glLightfv(GL_LIGHT1, GL_POSITION, direction);
+	     glLightfv(GL_LIGHT0, GL_AMBIENT, white);
+	     glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+	     glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+	     glLightfv(GL_LIGHT0, GL_POSITION, direction);
 
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, black);
-	//glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
-	//glLightfv(GL_LIGHT1, GL_SPECULAR, white);
-	//glLightfv(GL_LIGHT1, GL_POSITION, direction1);
+	     glEnable(GL_LIGHTING);
+	     glEnable(GL_DEPTH_TEST);
+	     glEnable(GL_LIGHT0);
 
-	glLightfv(GL_LIGHT2, GL_AMBIENT, black);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, pink);
-	glLightfv(GL_LIGHT2, GL_SPECULAR, white);
-	glLightfv(GL_LIGHT2, GL_POSITION, direction1);
-
-	glLightfv(GL_LIGHT3, GL_AMBIENT, black);
-	glLightfv(GL_LIGHT3, GL_DIFFUSE, pink2);
-	glLightfv(GL_LIGHT3, GL_SPECULAR, white);
-	glLightfv(GL_LIGHT3, GL_POSITION, direction1);
-
-	//glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
+	     glEnable(GL_BLEND);
+	     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	     glEnable(GL_NORMALIZE);
 
 }
 
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition(80, 80);
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("CoinBear3D");
 
 	init();
-
+	loadTextures();
 	glutDisplayFunc(display);
 
 	glutSpecialFunc(specialKeys);
