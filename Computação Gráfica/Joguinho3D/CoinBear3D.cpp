@@ -247,14 +247,14 @@ void keyboard(unsigned char key, int x, int y) {
     	case 'c':
     		cout << "teste" << endl;
             if(olhoY == 20){
-            	olhoY = 0;
+            	olhoY = 1.5;
             	olhoX = 3;
-            	olhoZ = 0;
+            	olhoZ = 1.5;
             	centroY = 0;
-            	upX=1;
-            	upY=0;
-            	upZ=0;
-            }else if(olhoY == 0){
+            	upX=2;
+            	upY=2;
+            	upZ=2;
+            }else if(olhoY == 1.5){
             	olhoY = 20;
             	olhoX = 0;
             	centroY = 1;
@@ -274,23 +274,27 @@ void chao(){
 
 	//glRotatef(35.0, 1.0, 1.0, 0.0);
 
-	 glPushMatrix();
-	 glScalef(20, 0.1, 20);
-	 glColor3f(0,0.5,0);
-	 //glTranslatef(0.05, 1.9, 0.8);
-	 glutSolidCube(1);
-	 glPopMatrix();
+	glPushMatrix();
+	glScalef(20, 0.1, 20);
+	glColor3f(0,0.5,0);
+	//glTranslatef(0.05, 1.9, 0.8);
+	glutSolidCube(1);
+	glPopMatrix();
 
 }
 
 void arvore(){
+
 	glScalef(0.5,0.5,0.5);
+
+	glBindTexture( GL_TEXTURE_2D, texID[4] );
 	glPushMatrix();
 	glColor3f(0.5, 0.35, 0.05);
 	glScalef(1.2,3,1.2);
 	primitivaQ();
 	glPopMatrix();
 
+	glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glColor3f(0,1,0);
 	glScalef(2.5,2.5,2.5);
@@ -420,6 +424,7 @@ void display() {
 	glLoadIdentity();
 
 	//glEnable(GL_COLOR_MATERIAL);
+	//gluLookAt(olhoX, olhoY, olhoZ, objectX, centroY,objectZ, upX,upY,upZ);
 	gluLookAt(olhoX,olhoY,olhoZ,0,centroY,0,upX,upY,upZ);
 	glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
@@ -439,19 +444,19 @@ void display() {
 	chao();
 	glPopMatrix();
 
-	glBindTexture( GL_TEXTURE_2D, texID[1] );
+	//glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glTranslatef(0,1.5,0);
 	arvore();
 	glPopMatrix();
 
-	glBindTexture( GL_TEXTURE_2D, texID[1] );
+	//glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glTranslatef(3,1.5,0);
 	arvore();
 	glPopMatrix();
 
-	glBindTexture( GL_TEXTURE_2D, texID[1] );
+	//glBindTexture( GL_TEXTURE_2D, texID[1] );
 	glPushMatrix();
 	glTranslatef(0,1.5,3);
 	arvore();
@@ -527,7 +532,7 @@ void doFrame(int v) {
 
     		moedaVisivel = true;
     		moedaX = objectX + 1;
-    		moedaY = 15;
+    		moedaY = 5;
     		moedaZ = objectZ + 1;
     	}
     }
@@ -540,7 +545,7 @@ void doFrame(int v) {
 
         	bigornaVisivel = true;
         	bigornaX = objectX + 1;
-        	bigornaY = 15;
+        	bigornaY = 5;
         	bigornaZ = objectZ + 1;
         }
     }
